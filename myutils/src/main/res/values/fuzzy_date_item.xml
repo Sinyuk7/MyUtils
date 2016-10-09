@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="fuzzydatetime__seconds_ago">
+        <item quantity="other">刚刚</item>
+    </plurals>
+    <plurals name="fuzzydatetime__minutes_ago">
+        <item quantity="other">%d分钟前</item>
+    </plurals>
+    <plurals name="fuzzydatetime__hours_ago">
+
+        <item quantity="other">%d小时前</item>
+    </plurals>
+    <plurals name="fuzzydatetime__days_ago">
+
+        <item quantity="other">%d天前</item>
+    </plurals>
+    <plurals name="fuzzydatetime__weeks_ago">
+
+        <item quantity="other">%d个星期前</item>
+    </plurals>
+    <plurals name="fuzzydatetime__months_ago">
+
+        <item quantity="other">%d个月前</item>
+    </plurals>
+    <plurals name="fuzzydatetime__years_ago">
+
+        <item quantity="other">很久很久以前</item>
+    </plurals>
+</resources>
