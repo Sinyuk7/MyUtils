@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-group='com.github.80998062'
+group = 'com.github.80998062'
 apply plugin: 'com.github.dcendents.android-maven'
 
 android {
@@ -21,4 +21,5 @@ android {
 }
 
 dependencies {
+    compile 'com.android.support:appcompat-v7:24.2.1'
 }
