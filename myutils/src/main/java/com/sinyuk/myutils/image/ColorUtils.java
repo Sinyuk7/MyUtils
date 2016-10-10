@@ -6,7 +6,7 @@ import android.support.annotation.FloatRange;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
 
-import com.sinyuk.myutils.MathUtils;
+import com.sinyuk.myutils.math.MathUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

@@ -1,4 +1,4 @@
-package com.sinyuk.myutils;
+package com.sinyuk.myutils.math;
 
 /**
  * Borrowed from github.com/romannurik/muzei

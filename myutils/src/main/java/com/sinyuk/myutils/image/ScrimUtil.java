@@ -10,7 +10,7 @@ import android.graphics.drawable.shapes.RectShape;
 import android.support.annotation.ColorInt;
 import android.view.Gravity;
 
-import com.sinyuk.myutils.MathUtils;
+import com.sinyuk.myutils.math.MathUtils;
 import com.sinyuk.myutils.image.ColorUtils;
 
 /**
