@@ -1,4 +1,4 @@
-package com.sinyuk.myutils.text;
+package com.sinyuk.myutils.string;
 
 import java.util.Random;
 

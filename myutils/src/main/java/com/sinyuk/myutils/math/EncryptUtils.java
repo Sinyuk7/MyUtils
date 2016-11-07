@@ -3,7 +3,6 @@ package com.sinyuk.myutils.math;
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,6 +42,8 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import static com.sinyuk.myutils.ConvertUtils.bytes2HexString;
+
 /**
  * <ul>加解密工具
  * <li>MD5
@@ -72,16 +73,67 @@ import javax.crypto.spec.SecretKeySpec;
  * @author gzejia 978862664@qq.com
  * @link http://blog.csdn.net/gzejia/article/details/52755332
  */
-public class EncryptUtil {
+public class EncryptUtils {
 
     // 密钥是16位长度
     public static final String KEY = "1234567890123456";
 
-    private static final String TAG = "EncryptUtil";
 
-    private EncryptUtil() {
+    private EncryptUtils() {
         throw new UnsupportedOperationException("cannot be instantiated");
     }
+
+    /**
+     * SHA1加密
+     *
+     * @param data 明文字符串
+     * @return 16进制密文
+     */
+    public static String encryptSHA1ToString(String data) {
+        return encryptSHA1ToString(data.getBytes());
+    }
+
+
+    /**
+     * hash加密模板
+     *
+     * @param data      数据
+     * @param algorithm 加密算法
+     * @return 密文字节数组
+     */
+    private static byte[] hashTemplate(byte[] data, String algorithm) {
+        if (data == null || data.length <= 0) return null;
+        try {
+            MessageDigest md = MessageDigest.getInstance(algorithm);
+            md.update(data);
+            return md.digest();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    /**
+     * SHA1加密
+     *
+     * @param data 明文字节数组
+     * @return 密文字节数组
+     */
+    public static byte[] encryptSHA1(byte[] data) {
+        return hashTemplate(data, "SHA1");
+    }
+
+    /**
+     * SHA1加密
+     *
+     * @param data 明文字节数组
+     * @return 16进制密文
+     */
+    public static String encryptSHA1ToString(byte[] data) {
+        return bytes2HexString(encryptSHA1(data));
+    }
+
 
     /**
      * @param buf 2进制
@@ -283,8 +335,7 @@ public class EncryptUtil {
      */
     public static File base64DecodedFile(String filePath, String code) {
         if (TextUtils.isEmpty(filePath) || TextUtils.isEmpty(code)) {
-            Log.w(TAG, "File path or code not null");
-            return null;
+            throw new AssertionError("File path or code not null");
         }
 
         File desFile = new File(filePath);

@@ -1,10 +1,8 @@
-package com.sinyuk.myutils.text;
+package com.sinyuk.myutils.string;
 
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-
-import com.sinyuk.myutils.resource.StringUtils;
 
 
 /**

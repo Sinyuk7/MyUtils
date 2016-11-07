@@ -1,12 +1,16 @@
 package com.sinyuk.myutils.system;
 
 import android.app.Activity;
+import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.os.Build;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -14,41 +18,12 @@ import android.view.WindowManager;
  * ScreenUtils
  * <ul>
  * <strong>Convert between dp and sp</strong>
- * <li>{@link ScreenUtils#dpToPx(Context, float)}</li>
- * <li>{@link ScreenUtils#dpToPxInt(Context, float)}</li>
  * </ul>
  **/
 public class ScreenUtils {
 
     private static int screenWidth = 0;
     private static int screenHeight = 0;
-
-    private ScreenUtils() {
-        throw new AssertionError();
-    }
-
-
-    public static float dpToPx(Context context, float dp) {
-        if (context == null) {
-            return -1;
-        }
-        return dp * context.getResources().getDisplayMetrics().density;
-    }
-
-//    public static float pxToDp(Context context, float px) {
-//        if (context == null) {
-//            return -1;
-//        }
-//        return px / context.getResources().getDisplayMetrics().density;
-//    }
-
-    public static int dpToPxInt(Context context, float dp) {
-        return (int) (dpToPx(context, dp) + 0.5f);
-    }
-
-//    public static int pxToDpCeilInt(Context context, float px) {
-//        return (int) (pxToDp(context, px) + 0.5f);
-//    }
 
 
     public static int getScreenHeight(Context c) {
@@ -75,127 +50,125 @@ public class ScreenUtils {
         return screenWidth;
     }
 
+
+
+
+
+    private ScreenUtils() {
+        throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+
     /**
-     * Detects and toggles immersive mode (also known as "hidey bar" mode).
+     * 设置屏幕为横屏
+     * <p>还有一种就是在Activity中加属性android:screenOrientation="landscape"</p>
+     * <p>不设置Activity的android:configChanges时，切屏会重新调用各个生命周期，切横屏时会执行一次，切竖屏时会执行两次</p>
+     * <p>设置Activity的android:configChanges="orientation"时，切屏还是会重新调用各个生命周期，切横、竖屏时只会执行一次</p>
+     * <p>设置Activity的android:configChanges="orientation|keyboardHidden|screenSize"（4.0以上必须带最后一个参数）时
+     * 切屏不会重新调用各个生命周期，只会执行onConfigurationChanged方法</p>
+     *
+     * @param activity activity
      */
-    public static void toggleHideyBar(final Activity activity) {
-
-        // BEGIN_INCLUDE (get_current_ui_flags)
-        // The UI options currently enabled are represented by a bitfield.
-        // getSystemUiVisibility() gives us that bitfield.
-        int uiOptions = activity.getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        // END_INCLUDE (get_current_ui_flags)
-        // BEGIN_INCLUDE (toggle_ui_flags)
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if (isImmersiveModeEnabled) {
-            Log.i(ScreenUtils.class.getSimpleName(), "Turning immersive mode mode off. ");
-        } else {
-            Log.i(ScreenUtils.class.getSimpleName(), "Turning immersive mode mode on.");
-        }
-
-        // Navigation bar hiding:  Backwards compatible to ICS.
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        // Status bar hiding: Backwards compatible to Jellybean
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        // Immersive mode: Backward compatible to KitKat.
-        // Note that this flag doesn't do anything by itself, it only augments the behavior
-        // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-        // all three flags are being toggled together.
-        // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-        // Sticky immersive mode differs in that it makes the navigation and status bars
-        // semi-transparent, and the UI flag does not get cleared when the user interacts with
-        // the screen.
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions ^= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
-        //END_INCLUDE (set_ui_flags)
+    public static void setLandscape(Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
-
-    public static void hideSystemyBar(final Activity activity) {
-
-        int uiOptions = activity.getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if (isImmersiveModeEnabled) {
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions += View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions += View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions += View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    /**
+     * 设置屏幕为竖屏
+     *
+     * @param activity activity
+     */
+    public static void setPortrait(Activity activity) {
+        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    public static void showSystemyBar(final Activity activity) {
-
-        int uiOptions = activity.getWindow().getDecorView().getSystemUiVisibility();
-        int newUiOptions = uiOptions;
-        boolean isImmersiveModeEnabled =
-                ((uiOptions | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY) == uiOptions);
-        if (!isImmersiveModeEnabled) {
-            return;
-        }
-
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions -= View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
-        }
-
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions -= View.SYSTEM_UI_FLAG_FULLSCREEN;
-        }
-
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions -= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        }
-
-        activity.getWindow().getDecorView().setSystemUiVisibility(newUiOptions);
+    /**
+     * 判断是否横屏
+     *
+     * @param context 上下文
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean isLandscape(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 
-
-    public static int getScrollThreshold(Context context) {
-        return ScreenUtils.dpToPxInt(context, 20);
+    /**
+     * 判断是否竖屏
+     *
+     * @param context 上下文
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean isPortrait(Context context) {
+        return context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 
-    public static void hindNavBar(Activity activity) {
-        View decorView = activity.getWindow().getDecorView();
-        // Hide both the navigation bar and the status bar.
-        // SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
-        // a general rule, you should design your app to hide the status bar whenever you
-        // hide the navigation bar.
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+    /**
+     * 获取屏幕旋转角度
+     *
+     * @param activity activity
+     * @return 屏幕旋转角度
+     */
+    public static int getScreenRotation(Activity activity) {
+        switch (activity.getWindowManager().getDefaultDisplay().getRotation()) {
+            default:
+            case Surface.ROTATION_0:
+                return 0;
+            case Surface.ROTATION_90:
+                return 90;
+            case Surface.ROTATION_180:
+                return 180;
+            case Surface.ROTATION_270:
+                return 270;
+        }
     }
 
-    public static Rect getRectOnScreen(View view) {
-        int[] loc = new int[2];
-        view.getLocationOnScreen(loc);
-        return new Rect(loc[0], loc[1], loc[0] + view.getWidth(), loc[1] + view.getHeight());
+    /**
+     * 获取当前屏幕截图，包含状态栏
+     *
+     * @param activity activity
+     * @return Bitmap
+     */
+    public static Bitmap captureWithStatusBar(Activity activity) {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bmp = view.getDrawingCache();
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Bitmap ret = Bitmap.createBitmap(bmp, 0, 0, dm.widthPixels, dm.heightPixels);
+        view.destroyDrawingCache();
+        return ret;
     }
 
-    public static int getDiagonalLength(Context context) {
-        return (int) Math.hypot(getScreenHeight(context), getScreenWidth(context));
+    /**
+     * 获取当前屏幕截图，不包含状态栏
+     *
+     * @param activity activity
+     * @return Bitmap
+     */
+    public static Bitmap captureWithoutStatusBar(Activity activity) {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bmp = view.getDrawingCache();
+        int statusBarHeight = SystemBarUtils.getStatusBarHeight(activity);
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        Bitmap ret = Bitmap.createBitmap(bmp, 0, statusBarHeight, dm.widthPixels, dm.heightPixels - statusBarHeight);
+        view.destroyDrawingCache();
+        return ret;
+    }
+
+    /**
+     * 判断是否锁屏
+     *
+     * @param context 上下文
+     * @return {@code true}: 是<br>{@code false}: 否
+     */
+    public static boolean isScreenLock(Context context) {
+        KeyguardManager km = (KeyguardManager) context
+                .getSystemService(Context.KEYGUARD_SERVICE);
+        return km.inKeyguardRestrictedInputMode();
     }
 
 

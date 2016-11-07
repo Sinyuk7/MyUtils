@@ -1,4 +1,4 @@
-package com.sinyuk.myutils.image;
+package com.sinyuk.myutils;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.*;

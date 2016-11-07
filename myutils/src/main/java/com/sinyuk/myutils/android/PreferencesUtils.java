@@ -1,4 +1,4 @@
-package com.sinyuk.myutils.data;
+package com.sinyuk.myutils.android;
 
 import android.content.Context;
 import android.content.SharedPreferences;

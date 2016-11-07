@@ -1,4 +1,4 @@
-package com.sinyuk.myutils.text;
+package com.sinyuk.myutils.string;
 
 import android.text.TextUtils;
 
@@ -8,6 +8,11 @@ import java.text.DecimalFormat;
  * Created by Sinyuk on 16/8/7.
  */
 public class FormatUtils {
+
+    private FormatUtils() {
+        throw new AssertionError("can't access a private constructor");
+    }
+
     public static String shortenNumber(CharSequence sequence) {
         if (!TextUtils.isEmpty(sequence)) {
             int length = sequence.length();
@@ -47,6 +52,7 @@ public class FormatUtils {
 
     /**
      * 给价格加上逗号分隔和rmb符号
+     *
      * @param unFormatted
      * @return
      */

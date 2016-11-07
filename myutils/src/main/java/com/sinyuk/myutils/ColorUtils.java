@@ -1,4 +1,4 @@
-package com.sinyuk.myutils.image;
+package com.sinyuk.myutils;
 
 import android.graphics.Color;
 import android.support.annotation.ColorInt;

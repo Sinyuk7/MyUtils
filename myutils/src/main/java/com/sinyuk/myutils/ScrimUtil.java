@@ -1,4 +1,4 @@
-package com.sinyuk.utils.image;
+package com.sinyuk.myutils;
 
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -11,7 +11,6 @@ import android.support.annotation.ColorInt;
 import android.view.Gravity;
 
 import com.sinyuk.myutils.math.MathUtils;
-import com.sinyuk.myutils.image.ColorUtils;
 
 /**
  * * Borrowed from github.com/romannurik/muzei

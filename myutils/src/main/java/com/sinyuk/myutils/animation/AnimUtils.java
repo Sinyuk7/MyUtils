@@ -2,7 +2,6 @@ package com.sinyuk.myutils.animation;
 
 import android.animation.Animator;
 import android.animation.TimeInterpolator;
-import android.content.Context;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.transition.Transition;
@@ -10,7 +9,6 @@ import android.util.ArrayMap;
 import android.util.FloatProperty;
 import android.util.IntProperty;
 import android.util.Property;
-import android.view.animation.Interpolator;
 
 import java.util.ArrayList;
 
@@ -19,7 +17,9 @@ import java.util.ArrayList;
  */
 public class AnimUtils {
 
-    private AnimUtils() { }
+    private AnimUtils() {
+        throw  new AssertionError();
+    }
 
     /**
      * Linear interpolate between a and b with parameter t.
