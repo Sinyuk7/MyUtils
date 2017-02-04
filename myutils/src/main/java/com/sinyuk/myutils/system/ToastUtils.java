@@ -20,20 +20,20 @@ public class ToastUtils {
     }
 
     public void toastShort(@NonNull String message) {
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        toast(message, Toast.LENGTH_SHORT);
     }
 
     public void toastShort(int resId) {
-        Toast.makeText(context, context.getString(resId), Toast.LENGTH_SHORT).show();
+        toast(context.getString(resId), Toast.LENGTH_SHORT);
     }
 
     public void toastLong(@NonNull String message) {
-        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        toast(message, Toast.LENGTH_LONG);
     }
 
 
     public void toastLong(int resId) {
-        Toast.makeText(context, context.getString(resId), Toast.LENGTH_LONG).show();
+        toast(context.getString(resId), Toast.LENGTH_LONG);
     }
 
     public void toastWithPicture(int resId, CharSequence text) {
@@ -54,5 +54,36 @@ public class ToastUtils {
         toast.setView(ll);
 
         toast.show();
+    }
+
+
+    private static CharSequence oldMsg = null;
+    private static int oldDuration = 0;
+    private static Toast toast = null;
+    private static long firstTime = 0;
+    private static long secondTime = 0;
+
+    private void toast(CharSequence text, int duration) {
+        if (toast == null) {
+            firstTime = System.currentTimeMillis();
+            toast = Toast.makeText(context, text, duration);
+            toast.show();
+        } else {
+            secondTime = System.currentTimeMillis();
+            if (text.equals(oldMsg)) {
+                if (secondTime - firstTime > oldDuration) {
+                    toast.show();
+                } else {
+                    // pass
+                }
+            } else {
+                oldMsg = text;
+                toast.setText(text);
+                toast.show();
+            }
+        }
+
+        firstTime = secondTime;
+        oldDuration = duration;
     }
 }
